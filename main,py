@@ -1,0 +1,80 @@
+import tkinter as tk
+from tkinter import ttk
+import wikipediaapi
+
+def fetch_wikipedia_summary():
+    search_term = search_entry.get()
+    wiki = wikipediaapi.Wikipedia(
+        language='en',
+        user_agent='MyWikiApp/1.0 (yourname@example.com)'
+    )
+    page = wiki.page(search_term)
+    
+    summary_text.delete(1.0, tk.END)
+
+    if page.exists():
+        summary_text.insert(tk.END, page.summary)
+    else:
+        summary_text.insert(tk.END, "Page not found. Please try a different search term.")
+
+def toggle_theme():
+    current_theme = root.tk_setPalette()  
+    if current_theme == 'light':  
+        root.tk_setPalette(background='#212121', foreground='#FFFFFF')
+        theme_button.config(style='Dark.TButton', text="Switch to Light Theme")
+    else:  
+        root.tk_setPalette(background='white', foreground='black')
+        theme_button.config(style='Light.TButton', text="Switch to Dark Theme")
+
+def open_black_mode():
+    root_black = tk.Tk()
+    root_black.title("Wikipedia Searcher")
+
+    style = ttk.Style()
+    style.configure('Light.TButton', foreground="#A020F0", background="#424242", font=("Arial", 12))
+    style.configure('Dark.TButton', foreground="#FFFFFF", background="#212121", font=("Arial", 12))
+
+    theme_button = ttk.Button(root_black, text="Switch to Dark Theme", command=toggle_theme, style='Light.TButton')
+    theme_button.grid(column=0, row=0, padx=10, pady=10)
+
+    root_black.tk_setPalette(background='#212121', foreground='#FFFFFF')
+
+    ttk.Label(root_black, text="Enter a search term:", foreground="#A020F0", background="#212121").grid(column=0, row=1, padx=10, pady=10)
+
+    search_entry = ttk.Entry(root_black, width=50, style='Light.TButton')
+    search_entry.grid(column=1, row=1, padx=10, pady=10)
+
+    ttk.Button(root_black, text="Search", command=fetch_wikipedia_summary, style='Light.TButton').grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+
+    ttk.Label(root_black, text="Wikipedia Summary:", foreground="#A020F0", background="#212121").grid(column=0, row=3, padx=10, pady=10)
+
+    summary_text = tk.Text(root_black, wrap='word', width=150, height=60, bg='#424242', fg='#A020F0', insertbackground="#A020F0")
+    summary_text.grid(column=0, row=4, columnspan=2, padx=10, pady=10)
+
+    root_black.mainloop()
+
+root = tk.Tk()
+root.title("Wikipedia Searcher")
+
+style = ttk.Style()
+style.configure('Light.TButton', foreground="#A020F0", background="#424242", font=("Arial", 12))
+style.configure('Dark.TButton', foreground="#FFFFFF", background="#212121", font=("Arial", 12))
+
+theme_button = ttk.Button(root, text="Switch to Dark Theme", command=open_black_mode, style='Light.TButton')
+theme_button.grid(column=0, row=0, padx=10, pady=10)
+
+root.tk_setPalette(background='#212121', foreground='#FFFFFF')
+
+ttk.Label(root, text="Enter a search term:", foreground="#A020F0", background="#212121").grid(column=0, row=1, padx=10, pady=10)
+
+search_entry = ttk.Entry(root, width=50, style='Light.TButton')
+search_entry.grid(column=1, row=1, padx=10, pady=10)
+
+ttk.Button(root, text="Search", command=fetch_wikipedia_summary, style='Light.TButton').grid(column=0, row=2, columnspan=2, padx=10, pady=10)
+
+ttk.Label(root, text="Wikipedia Summary:", foreground="#A020F0", background="#212121").grid(column=0, row=3, padx=10, pady=10)
+
+summary_text = tk.Text(root, wrap='word', width=150, height=60, bg='#424242', fg='#A020F0', insertbackground="#A020F0")
+summary_text.grid(column=0, row=4, columnspan=2, padx=10, pady=10)
+
+root.mainloop()
